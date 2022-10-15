@@ -20,7 +20,7 @@ dependencies:
   loggy: ^2.0.1+1
   flutter_loggy: ^2.0.1
   hex: ^0.2.0
-  graphql: ^5.1.1
+  graphql_flutter: ^5.1.0
 
 dev_dependencies:
   flutter_test:

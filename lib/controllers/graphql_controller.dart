@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
-import 'package:graphql/client.dart';
+//import 'package:graphql/client.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 class GraphQLController extends GetxController with UiLoggy {
   final _httpLink = HttpLink(
@@ -27,7 +28,7 @@ class GraphQLController extends GetxController with UiLoggy {
     options = QueryOptions(
       document: gql(
         """
-          query getHero(\$heroId: ID!)
+          query getVero(\$heroId: ID!)
           {
             hero(id: \$heroId) {
               id
@@ -69,7 +70,7 @@ class GraphQLController extends GetxController with UiLoggy {
   }
 
   Future<String> getHeroData() async {
-    QueryResult result = await client.query(options);
+    QueryResult result = await client.query(options2);
     logInfo(result.toString());
     return result.toString();
   }
