@@ -14,6 +14,23 @@ class RequestController extends GetxController with UiLoggy {
     walletAddress.value = address;
   }
 
+  Rx<String> graphQL_Url =
+      "defi-kingdoms-community-api-gateway-co06z8vi.uc.gateway.dev".obs;
+  Rx<String> graphPath = "/graphql".obs;
+  String query = r'''
+          query getHero($heroId: ID!){
+            hero(id: $heroId) {
+              id
+              mainClass
+              owner {
+                id
+                name
+              }
+            }
+          }
+        ''';
+  var variables = {'heroId': 1};
+
   Future<http.Response> getBalanceRequest() async {
     // var body = jsonEncode({
     //   'data': {'apikey': '12345678901234567890'}
@@ -42,6 +59,27 @@ class RequestController extends GetxController with UiLoggy {
         int.parse(value["result"].toString().replaceAll("0x", ""), radix: 16);
 
     logInfo(balance.toDouble() / 1e18);
+    return response;
+  }
+
+  Future<http.Response> getHeroRequest() async {
+    // var body = jsonEncode({
+    //   'data': {'apikey': '12345678901234567890'}
+    // });
+
+    var body = jsonEncode({'query': query, 'variables': variables});
+
+    logInfo("Body: " + body);
+    var uri = Uri.https(graphQL_Url.value, graphPath.value);
+    logInfo(uri);
+
+    var response = await http.post(uri,
+        headers: {"Content-Type": "application/json"}, body: body);
+
+    logInfo("Response status: ${response.statusCode}");
+    logInfo("Response body: ${response.body}");
+    logInfo(response.headers);
+    //var value = jsonDecode(response.body);
     return response;
   }
 }

@@ -227,8 +227,9 @@ class WalletSelectPage extends StatelessWidget {
                     ),
                     ElevatedButton(
                       onPressed: () async {
-                        var res = await graphQLController.getHeroData();
-                        addressEditController.text = res;
+                        // var res = await graphQLController.getHeroData();
+                        // addressEditController.text = res;
+                        await requestController.getHeroRequest();
                       },
                       style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
