@@ -21,6 +21,7 @@ dependencies:
   flutter_loggy: ^2.0.1
   hex: ^0.2.0
   graphql_flutter: ^5.1.0
+  flutter_spinkit: ^5.1.0
 
 dev_dependencies:
   flutter_test:

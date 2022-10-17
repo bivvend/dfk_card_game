@@ -1,9 +1,10 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:metamask_inegration_flutter/controllers/graphql_controller.dart';
+import 'package:metamask_inegration_flutter/controllers/card_controller.dart';
 import 'package:metamask_inegration_flutter/controllers/navigation_controller.dart';
 import 'package:metamask_inegration_flutter/enums/application_enums.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../controllers/meta_mask_controller.dart';
 import '../controllers/request_controller.dart';
@@ -14,7 +15,7 @@ class WalletSelectPage extends StatelessWidget {
   final MetaMaskController mmController = Get.find();
   final RequestController requestController = Get.find();
   final NavigationController navigationController = Get.find();
-  final GraphQLController graphQLController = Get.find();
+  final CardController cardController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -225,46 +226,72 @@ class WalletSelectPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        // var res = await graphQLController.getHeroData();
-                        // addressEditController.text = res;
-                        await requestController.getHeroRequest();
-                      },
-                      style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                          primary: const Color.fromARGB(255, 19, 43, 98),
-                          padding: const EdgeInsets.symmetric(horizontal: 10)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: const [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10.0),
-                            child: Icon(Icons.download),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            "Get Cards",
-                            style: TextStyle(
-                              color: Colors.white60,
-                              fontSize: 18,
-                            ),
-                          ),
-                          SizedBox(width: 10)
-                        ],
-                      ),
-                    )
+                    Obx(() {
+                      return requestController.runningRequest.value
+                          ? const SpinKitRotatingCircle(
+                              color: Colors.white,
+                              size: 50.0,
+                            )
+                          : ElevatedButton(
+                              onPressed: () async {
+                                if (addressEditController.text.isNotEmpty) {
+                                  requestController.walletAddress.value =
+                                      addressEditController.text;
+                                  await cardController.getCards();
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                  primary:
+                                      const Color.fromARGB(255, 19, 43, 98),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10)),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: const [
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 10.0),
+                                    child: Icon(Icons.download),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    "Get Cards",
+                                    style: TextStyle(
+                                      color: Colors.white60,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  SizedBox(width: 10)
+                                ],
+                              ),
+                            );
+                    })
                   ],
                 )
               ],
             )),
-        Expanded(flex: 5, child: Container())
+        Expanded(
+            flex: 5,
+            child: Container(child: Obx(
+              () {
+                return GridView.count(
+                    primary: false,
+                    padding: const EdgeInsets.all(20),
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    crossAxisCount: 5,
+                    children: cardController.heroIDs
+                        .map((element) => Text(element))
+                        .toList());
+              },
+            )))
       ],
     );
   }

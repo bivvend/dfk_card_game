@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:metamask_inegration_flutter/controllers/card_controller.dart';
 import 'package:metamask_inegration_flutter/controllers/meta_mask_controller.dart';
 import 'package:metamask_inegration_flutter/controllers/navigation_controller.dart';
 import 'package:metamask_inegration_flutter/controllers/request_controller.dart';
@@ -8,8 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:loggy/loggy.dart';
-
-import 'controllers/graphql_controller.dart';
 import 'pages/navigation_flow_page.dart';
 
 void main() {
@@ -25,8 +24,9 @@ void main() {
   Get.put<RequestController>(RequestController());
   //Inject App navigation controller
   Get.put<NavigationController>(NavigationController());
-  //Inject GraphQL controller for data
-  Get.put<GraphQLController>(GraphQLController());
+
+  //Inject Card controller  for data storage  //this needs to be last as has dependecies
+  Get.put<CardController>(CardController());
   runApp(const MyApp());
 }
 
